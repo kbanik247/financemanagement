@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% block content %}
+<div class="heading"><div><div class="eyebrow">FINANCIAL OVERVIEW</div><h1>Your money, in one view.</h1><p class="muted">A consolidated snapshot of cash flow, accounts and investments.</p></div><a class="primary button" href="/transactions">＋ Add transaction</a></div>
+<div class="filters"><a class="{% if period=='month' %}selected{% endif %}" href="/?period=month">This month</a><a class="{% if period=='previous' %}selected{% endif %}" href="/?period=previous">Previous month</a><a class="{% if period=='year' %}selected{% endif %}" href="/?period=year">Calendar year</a><a class="{% if period=='fy' %}selected{% endif %}" href="/?period=fy">Financial year</a></div>
+<div class="cards">
+<div class="metric"><span>Income</span><strong>₹{{"%.2f"|format(data.income)}}</strong><small>Posted receipts in selected period</small></div>
+<div class="metric"><span>Expenses</span><strong>₹{{"%.2f"|format(data.expenses)}}</strong><small>Operating expenditure</small></div>
+<div class="metric"><span>Net cash savings</span><strong>₹{{"%.2f"|format(data.savings)}}</strong><small>{{"%.1f"|format(data.savings_pct)}}% of income</small></div>
+<div class="metric dark"><span>Available bank cash</span><strong>₹{{"%.2f"|format(data.bank)}}</strong><small>Across active and inactive accounts</small></div>
+<div class="metric"><span>Opening balances</span><strong>₹{{"%.2f"|format(data.opening)}}</strong><small>Sum of configured opening balances</small></div>
+<div class="metric"><span>Investment value</span><strong>₹{{"%.2f"|format(investments.value)}}</strong><small>Manual valuation · invested ₹{{"%.2f"|format(investments.invested)}}</small></div>
+<div class="metric"><span>Portfolio gain / loss</span><strong>₹{{"%.2f"|format(investments.gain)}}</strong><small>Unrealized, based on entered values</small></div>
+<div class="metric"><span>Investment purchases</span><strong>₹{{"%.2f"|format(data.investment_buys)}}</strong><small>Cash allocated during period</small></div></div>
+<div class="grid two"><section class="panel"><div class="section-head"><h2>Bank accounts</h2><a href="/accounts">Manage →</a></div>{% for a in accounts %}<div class="account-row"><div><b>{{a.nickname}}</b><small>{{a.bank_name}} · {{a.masked_number or 'No masked number'}}</small></div><strong>₹{{"%.2f"|format(a.balance)}}</strong></div>{% else %}<p class="muted">Add your first bank account to start tracking cash.</p>{% endfor %}</section>
+<section class="panel"><h2>Portfolio allocation</h2><div class="donut" style="--p:{{ 100 if investments.value else 0 }}%"><span>{{"%.1f"|format(investments.value and investments.gain/investments.value*100 or 0)}}%<small>gain / value</small></span></div><p class="muted">Add mutual funds and stocks in Investments. Market values are manual; no live prices are fetched.</p></section></div>
+<div class="note"><b>Accounting note:</b> Savings here means income minus operating expenses. Investment contributions are shown separately and are not counted as consumption expenses. Transfers between your own accounts are excluded from both income and expenses.</div>
+{% endblock %}

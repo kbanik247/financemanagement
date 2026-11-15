@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block content %}<div class="heading"><div><div class="eyebrow">DAILY LEDGER</div><h1>Transactions</h1><p class="muted">Record receipts, spending and investment cash movements.</p></div><a class="button" href="/export.csv">Export CSV</a></div>
+<section class="panel"><h2>Quick add</h2><form method="post" class="formgrid"><input type="hidden" name="_csrf" value="{{csrf}}">
+<label>Date<input type="date" name="txn_date" value="{{__import__ if false else ''}}" required></label>
+<label>Type<select name="kind"><option value="expense">Expense</option><option value="income">Income</option><option value="investment_buy">Investment purchase</option><option value="investment_sell">Investment sale / withdrawal</option></select></label>
+<label>Amount (₹)<input type="number" name="amount" step="0.01" min="0.01" required></label>
+<label>Bank account<select name="account_id" required>{% for a in accounts %}<option value="{{a.id}}">{{a.nickname}}</option>{% endfor %}</select></label>
+<label>Category<input name="category" placeholder="Salary, groceries, healthcare..."></label>
+<label>Subcategory<input name="subcategory"></label>
+<label>Description<input name="description" required></label><label>Source / property<input name="source" placeholder="Employer or rental source"></label>
+<label>Property<select name="property_id"><option value="">Not applicable</option>{% for p in properties %}<option value="{{p.id}}">{{p.name}}</option>{% endfor %}</select></label>
+<label>Payment method<input name="payment_method" placeholder="UPI, NEFT, card..."></label><label>Merchant / vendor<input name="merchant"></label>
+<label>Status<select name="status"><option value="posted">Posted</option><option value="pending">Pending confirmation</option></select></label>
+<label class="wide">Remarks<input name="remarks"></label><button class="primary">Save transaction</button></form></section>
+<section class="panel"><h2>Recent transactions</h2><div class="tablewrap"><table><thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Account</th><th>Amount</th><th>Status</th><th></th></tr></thead><tbody>{% for t in txns %}<tr><td>{{t.txn_date}}</td><td>{{t.kind.replace('_',' ')}}</td><td>{{t.description}}<small>{{t.category}}</small></td><td>{{t.nickname or '—'}}</td><td>₹{{"%.2f"|format(t.amount)}}</td><td>{{t.status}}</td><td><a href="/transactions/{{t.id}}/edit">Edit</a><form class="inline" method="post" action="/transactions/{{t.id}}/delete" onsubmit="return confirm('Delete this transaction?')"><input type="hidden" name="_csrf" value="{{csrf}}"><button class="danger link">Delete</button></form></td></tr>{% else %}<tr><td colspan="7">No transactions recorded.</td></tr>{% endfor %}</tbody></table></div></section>{% endblock %}

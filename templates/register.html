@@ -1,0 +1,2 @@
+{% extends "base.html" %}{% block content %}<section class="auth panel"><div class="eyebrow">INITIAL SETUP</div><h1>Create your account</h1><p class="muted">Choose a unique username and a strong password (12+ characters).</p>
+<form method="post"><label>Username<input name="username" required minlength="3"></label><label>Password<input type="password" name="password" required minlength="12"></label><button class="primary">Create account</button></form><p class="muted"><a href="/login">Back to sign in</a></p></section>{% endblock %}

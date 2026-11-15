@@ -1,0 +1,7 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{ title or "FinControl" }}</title><link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}"></head>
+<body><header class="top"><a class="brand" href="/">◈ FinControl</a>{% if session.get('uid') %}<nav>
+<a href="/">Overview</a><a href="/transactions">Transactions</a><a href="/accounts">Accounts</a><a href="/transfer">Transfer</a><a href="/properties">Properties</a><a href="/investments">Investments</a><a href="/reports">Reports</a><a href="/import">Import</a>
+</nav><form method="post" action="/logout"><input type="hidden" name="_csrf" value="{{csrf}}"><button class="link">Sign out</button></form>{% endif %}</header>
+<main>{% with messages=get_flashed_messages() %}{% if messages %}<div class="alerts">{% for m in messages %}<div class="alert">{{m}}</div>{% endfor %}</div>{% endif %}{% endwith %}{% block content %}{% endblock %}</main>
+<footer>FinControl · Private personal finance ledger · Verify balances against bank statements</footer></body></html>
